@@ -5,11 +5,9 @@ import orange from '@material-ui/core/colors/orange'
 import { ThemeProvider } from '@material-ui/core/styles'
 import SigninSide from './signup/SigninSide'
 import './App.css';
-import { Router, Route, Link } from 'react-router-dom';
-import { history } from './helpers/history'
-import { PrivateRoute } from './routes/PrivateRoute'
-import { authenticationService } from './services/authentication.service';
-import Dashboard from './components/Dashboard';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import AuthComponent from './routing/auth/AuthComponent'
+import Dashboard from './dashboard/Dashboard'
 
 const theme = createMuiTheme({
   palette: {
@@ -20,26 +18,17 @@ const theme = createMuiTheme({
 
 class App extends Component {
 
-  state ={
-    currentUser: null
-  }
-
-  componentDidMount() {
-    authenticationService.currentUser.subscribe(x => this.setState({ currentUser: x }));
-  }
-  
-  logout() {
-    authenticationService.logout();
-    history.push('/login');
-  }
-
   render() {
     return (
-      <Router history={history}>
+      <Router>
       <ThemeProvider theme={theme}>
       <div className="App">
-      <PrivateRoute exact path="/" component={Dashboard} />
-        <Route path="/login" component={SigninSide} />
+        <Switch>
+      <Route path={'/login'} exact component={SigninSide} />
+      <AuthComponent>
+        <Route path={'/dashboard'} component={Dashboard} />
+      </AuthComponent>
+      </Switch>
       </div>
       </ThemeProvider>
       </Router>

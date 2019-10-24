@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,10 +15,11 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Loader from 'react-loader-spinner';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { MdMailOutline, MdVerifiedUser } from 'react-icons/md'
+import { MdMailOutline, MdVerifiedUser } from 'react-icons/md';
 import axios from 'axios';
-import {validate} from '../hookValidation/LoginFormValidationRules'
-import { authenticationService } from '../services/authentication.service';
+import {validate} from '../hookValidation/LoginFormValidationRules';
+import {handleLogin, handleLoginError} from '../service/handleLogin';
+import {isLoggedIn} from '../helpers/jwt'
 
 function Copyright() {
   return (
@@ -63,7 +64,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SigninSide() {
+export default function SigninSide(props) {
+
+
+  useEffect(() =>{
+    if(isLoggedIn()){
+      props.history.push('/dashboard')
+    }
+    console.log(props.history)
+  })
 
   const classes = useStyles();
 
@@ -73,22 +82,24 @@ export default function SigninSide() {
                   password: values.password}  
       //status code should be 401 here instead
 
-      authenticationService.login(user.email, user.password)
-      .then(data =>{
-        const {trainer} = data.data
-        setIsLoading(false);
-        console.log(trainer)
-        const { from } = this.props.location.state || {from: {pathname: "/"}};
-        this.props.history.push(from);
-      }).catch(err =>{
-        console.log(err)
-      })
-  }
+    //should be wrapped into seperate function 
+    axios.post('http://localhost:4000/api/auth/login', user)
+    .then(res =>{
+      setIsLoading(false)
+      const {token, trainer} = res.data.data;
+      handleLogin(token, trainer)
+      props.history.push('/dashboard')
+    }).catch(err =>{
+      setIsLoading(false)
+            //create seperate handler
+      setLoginError(handleLoginError(err))
+    })
+}
   const [isLoading, setIsLoading] = React.useState(false)
-  const { values, errors, handleChange, handleSubmit } = useForm(submitHandler, validate);
-  console.log(values)
+  const [loginError, setLoginError] = React.useState("")
+  const { values, errors, handleChange, handleSubmit} = useForm(submitHandler, validate);
 
-
+  
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -150,6 +161,10 @@ export default function SigninSide() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+            {loginError &&
+            <div style={{backgroundColor: 'red', padding: '5px', borderRadius: '5px'}}>
+            <p style={{color: 'white', fontSize: '15px'}}>{loginError}</p>
+            </div>}
             <Button
               type="submit"
               fullWidth
