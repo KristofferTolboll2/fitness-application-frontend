@@ -1,5 +1,4 @@
 /* eslint-disable no-script-url */
-
 import React from 'react';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
@@ -8,7 +7,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Title from '../Title';
+import Title from '../../ui/Title';
 import Trainer from './Trainer'
 // Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount, image) {
@@ -29,11 +28,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Orders() {
+export default function Trainers() {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
+      <Title>Suggested Trainers</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -46,8 +45,8 @@ export default function Orders() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
-            <Trainer row={row}/>
+          {rows.map((row, i) => (
+            <Trainer row={row} key={`item number ${i+1}`}/>
           ))}
         </TableBody>
       </Table>

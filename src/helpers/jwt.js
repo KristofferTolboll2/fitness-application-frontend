@@ -14,12 +14,18 @@ export const setJwt = (jwt) =>{
     }
 }
 
-export const isLoggedIn = () =>{
-    axios.post('http://localhost:4000/api/trainer/auth')
+export const isLoggedIn = async () =>{
+    if(!getJwt()){
+        return false;
+    }else{
+    axios.get('http://localhost:4000/api/trainer/auth', {headers: {Authorization: `Bearer ${getJwt()}`}})
     .then(res =>{
         console.log(res.data.response)
         return res.data.response
     }).catch(err =>{
         //should be logged
+        console.log(err)
+        return false
     })
+}
 }

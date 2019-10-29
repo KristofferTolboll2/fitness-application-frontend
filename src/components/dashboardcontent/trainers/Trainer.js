@@ -3,13 +3,14 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import './Trainer.css'
 
 export default function Trainer(props) {
     const {row} = props;
     console.log(props.row.image)
     return (
-            <TableRow key={row.id} style={{border: '1px solid black'}}>
-              <TableCell><img style={{width: '80%', height: 'auto', maxWidth: '100px'}} src={row.image}></img></TableCell>  
+            <TableRow key={row.id} style={{border: '1px solid black'}} className="trainer-container" onClick={() => console.log('trainer clicked')}>
+              <TableCell><img style={{width: '100%', height: 'auto', maxWidth: '60px', minWidth: '30px'}} src={row.image}></img></TableCell>  
               <TableCell><p>{row.date}</p></TableCell>
               <TableCell><p>{row.name}</p></TableCell>
               <TableCell><p>{row.shipTo}</p></TableCell>

@@ -18,8 +18,9 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import { MdMailOutline, MdVerifiedUser } from 'react-icons/md';
 import axios from 'axios';
 import {validate} from '../hookValidation/LoginFormValidationRules';
-import {handleLogin, handleLoginError} from '../service/handleLogin';
-import {isLoggedIn} from '../helpers/jwt'
+import {handleLogin, handleLoginError} from '../helpers/handleAuth';
+import {isLoggedIn} from '../helpers/jwt';
+
 
 function Copyright() {
   return (
@@ -67,13 +68,6 @@ const useStyles = makeStyles(theme => ({
 export default function SigninSide(props) {
 
 
-  useEffect(() =>{
-    if(isLoggedIn()){
-      props.history.push('/dashboard')
-    }
-    console.log(props.history)
-  })
-
   const classes = useStyles();
 
   const submitHandler = () =>{
@@ -81,10 +75,10 @@ export default function SigninSide(props) {
     const user = {email: values.email, 
                   password: values.password}  
       //status code should be 401 here instead
-
     //should be wrapped into seperate function 
     axios.post('http://localhost:4000/api/auth/login', user)
     .then(res =>{
+      console.log(res)
       setIsLoading(false)
       const {token, trainer} = res.data.data;
       handleLogin(token, trainer)

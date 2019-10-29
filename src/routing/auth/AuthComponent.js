@@ -20,17 +20,21 @@ import {getJwt} from '../../helpers/jwt';
             console.log(res.data)
             setUser(getJwt());
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+        if(err.response.status === 401 && user === undefined){
+            props.history.push('/login')
+        }
+    })
     })
     
-    console.log(user)
-    if(user === undefined){
-        return <LoadingScreen />
-    }
     if(user === null){
         props.history.push('/login')
     }
 
+    if(user === undefined){
+        return <LoadingScreen />
+    }
+    
     return props.children
 }
 
