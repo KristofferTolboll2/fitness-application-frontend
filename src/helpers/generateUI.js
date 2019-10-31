@@ -4,14 +4,14 @@ import DoneIcon from '@material-ui/icons/Done';
 import FitnessCenter from '@material-ui/icons/FitnessCenter'
 import Tooltip from '@material-ui/core/Tooltip';
 import CardActionArea from '@material-ui/core/CardActionArea'
-
+import ExposurePlus1 from '@material-ui/icons/ExposurePlus1'
 export const generateCertifications = (certification, cb) =>{
-    console.log(certification.score >= 299)
+    console.log(certification)
+    console.log('in generator')
     switch(true){
         case (certification.score >= 599):
             certification =   
-          
-                <div key={certification.name} key={certification.name} onClick={cb}>
+                <div key={certification.name} key={certification.name} onClick={() => cb(certification.id)}>
                     <Tooltip title="Verified And Popular Certification" placement="right">
                     <Chip   
                     icon={<FitnessCenter />}
@@ -27,13 +27,13 @@ export const generateCertifications = (certification, cb) =>{
         case (certification.score >= 499):
             console.log('500!')
                 certification = 
-                <Tooltip title="Verified Certification" placement="right" onClick={cb}>
+                <Tooltip title="Verified Certification" placement="right" onClick={() => cb(certification.id)}>
                 <div key={certification.name}>
                     <Chip 
                     label={certification.name}
                     color="primary"
                     style={{color: 'white'}}
-                    onDelete={() =>alert("Verified certification")}
+                    onDelete={() => {}}
                     deleteIcon={<DoneIcon />}
                         />
                     </div>
@@ -42,14 +42,17 @@ export const generateCertifications = (certification, cb) =>{
             
         case (certification.score >= 299):
                    certification = 
+                   <Tooltip title="Accepted" placement="right" onClick={() => cb(certification.id)}>
                     <div key={certification.name}>
                         <Chip 
                         label={certification.name}
                         color="secondary"
+                        style={{color: 'white'}}
                         onDelete={() => alert("Verified certification")}
                         deleteIcon={<DoneIcon />}
                             />
                         </div>
+                        </Tooltip>
                         break;
                     
                 
@@ -57,6 +60,7 @@ export const generateCertifications = (certification, cb) =>{
             certification = 
                 <div key={certification.name}>
                 <Chip 
+                color="#ff0000"
                 label={certification.name}
                     />
                 </div>  

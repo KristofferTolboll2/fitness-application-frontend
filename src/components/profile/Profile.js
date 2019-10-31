@@ -16,6 +16,10 @@ import {generateCertifications} from '../../helpers/generateUI'
 import Message from '@material-ui/icons/Message';
 import Event from '@material-ui/icons/Event';
 import Certification from '../ui/certifications/Certification';
+import ChatModal from '../../components/chat/ChatModal'
+import axios from 'axios'
+import {getJwt} from '../../helpers/jwt'
+import { useFetch } from '../../hooks/useFetch';
 
 const useStyles = makeStyles(theme =>({
     paper: {
@@ -45,19 +49,26 @@ const useStyles = makeStyles(theme =>({
 }))
 
 
-const certifications = [{name: 'best one', score: 1000}, {name: 'fitness-certification', score: 200}, {name: 'DAIA fitness 2012', score: 300}, {name:'Yoga Trainer certification', score: 500}, {name:'MSBA Personal Trainer Certificaton', score: 150}]
-
 export default function Profile(props) {
     const classes = useStyles();
-    useEffect(() =>{
-
-    })
 
 
     const [isImageModalOpen, setImageOpenModal] = React.useState(false);
     const [isCertificationModalOpen, setCertificationOpenModal] = React.useState(false);
+    const [isChatModalOpen, setChatOpenModal] = React.useState(false)
 
-    const setCloseImageModalHandler = () =>{
+    const [data, loading] = useFetch('http://localhost:4000/api/certification/get')
+
+    const setCloseChatModalHandler = () => {
+      setChatOpenModal(false);
+    }
+
+    const setOpenChatModalHandler = () => {
+      setChatOpenModal(true);
+    }
+
+
+    const setCloseImageModalHandler = () =>{    
       setImageOpenModal(false);
     }
 
@@ -70,16 +81,21 @@ export default function Profile(props) {
     }
 
     const setOpenCertificationModalHandler = () =>{
-      console.log('in handler')
       setCertificationOpenModal(true);
     }
 
-    const certificationComponents = certifications.map((certification,i) =>{
+    let certificationComponents = undefined
+    if(loading){
+      certificationComponents = <p>Loading...</p>
+    }else{
+      console.log(data.certifications)
+     certificationComponents = data.certifications.map((certification,i) =>{
       return(
         generateCertifications(certification, setOpenCertificationModalHandler)
       )
     })
-  
+  }
+
     return (
         <Dashboard {...props}>
         <div>
@@ -93,7 +109,7 @@ export default function Profile(props) {
                         <Typography component="h2" variant="h5">
                           <Title size={'28px'}>Name </Title>
                         </Typography>
-                        <Button endIcon={<Message></Message>}> Send Message</Button>
+                        <Button endIcon={<Message></Message>} onClick={setOpenChatModalHandler}> Send Message</Button>
                         <span style={{padding: '5px'}}/>
                         <Button endIcon={<Event></Event>}>Book Appointment</Button>
                         <br/>
@@ -116,6 +132,7 @@ export default function Profile(props) {
                 {/* Modal components */}
                 <Certification open={isCertificationModalOpen} setClose={setCloseCertificationModalHandler} />  
                <ImageCarousel open={isImageModalOpen} setClose={setCloseImageModalHandler} />
+               <ChatModal open={isChatModalOpen} setClose={setCloseChatModalHandler} name="Joe"/>
               {/* */}
               </Grid>
               <Grid item xs={12} lg={6} style={{padding: '10px'}}>

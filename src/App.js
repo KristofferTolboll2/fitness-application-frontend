@@ -4,6 +4,7 @@ import cyan from '@material-ui/core/colors/cyan';
 import orange from '@material-ui/core/colors/orange'
 import red from '@material-ui/core/colors/red'
 import green from '@material-ui/core/colors/green'
+import grey from '@material-ui/core/colors/grey'
 import { ThemeProvider } from '@material-ui/core/styles'
 import SigninSide from './signup/SigninSide'
 import './App.css';
@@ -13,19 +14,45 @@ import RoutingComponent from './components/RoutingComponent';
 import Profile from './components/profile/Profile';
 import {Router} from 'react-router'
 import history from './routing/history/history'
+import { indigo } from '@material-ui/core/colors';
 
-const theme = createMuiTheme({
+
+const standardTheme = createMuiTheme({
   palette: {
     primary: cyan,
     secondary: orange,
-    danger: red,
-    success: green
+  },
+  status: {
+    danger: 'orange',
+    success: 'green'
+  }
+})
+
+const darkTheme = createMuiTheme({
+  palette: {
+    primary: indigo,
+    secondary: grey,
+  },
+  status: {
+    danger: 'orange',
+    success: 'green'
   }
 })
 
 class App extends Component {
 
+  state = {
+    isDarkTheme: false
+  }
+
+  setDarkTheme = () =>{
+    this.setState(prevState =>({
+      isDarkTheme: !prevState.isDarkTheme
+    }))
+  }
   render() {
+    const {isDarkTheme} = this.state;
+    const theme = isDarkTheme ? darkTheme : standardTheme
     return (
       <Router history={history}>
       <ThemeProvider theme={theme}>

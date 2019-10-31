@@ -6,13 +6,20 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import axios from 'axios';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function AlertDialogSlide(props) {
-    const {open, setClose} = props;
+    const {open, setClose, id} = props;
+    const [certification, setCertification] = React.useState({})
+
+    React.useEffect(async () => {
+      const certification = await axios.get(`http://localhost:4000/api/get/${id}`)
+      setCertification(certification);
+    }, [])
   return (
     <div>
       <Dialog

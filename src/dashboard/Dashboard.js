@@ -17,6 +17,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import CustomizedMenus from './DropDownMenu';
 import useGetWindowDimenssions from '../hooks/useGetWindowDimenssions';
+import Switch from '@material-ui/core/Switch'
 import './Dashboard.css';
 
 
