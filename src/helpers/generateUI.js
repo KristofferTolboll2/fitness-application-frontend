@@ -3,15 +3,13 @@ import Chip from '@material-ui/core/Chip'
 import DoneIcon from '@material-ui/icons/Done';
 import FitnessCenter from '@material-ui/icons/FitnessCenter'
 import Tooltip from '@material-ui/core/Tooltip';
-import CardActionArea from '@material-ui/core/CardActionArea'
-import ExposurePlus1 from '@material-ui/icons/ExposurePlus1'
+import './generateUI.css';
+
 export const generateCertifications = (certification, cb) =>{
-    console.log(certification)
-    console.log('in generator')
     switch(true){
         case (certification.score >= 599):
             certification =   
-                <div key={certification.name} key={certification.name} onClick={() => cb(certification.id)}>
+                <div key={certification.name} onClick={() => cb(certification.id)}>
                     <Tooltip title="Verified And Popular Certification" placement="right">
                     <Chip   
                     icon={<FitnessCenter />}
@@ -27,8 +25,8 @@ export const generateCertifications = (certification, cb) =>{
         case (certification.score >= 499):
             console.log('500!')
                 certification = 
-                <Tooltip title="Verified Certification" placement="right" onClick={() => cb(certification.id)}>
-                <div key={certification.name}>
+                <Tooltip title="Verified Certification" placement="right" onClick={() => cb(certification.id)} key={certification.name}>
+                <div >
                     <Chip 
                     label={certification.name}
                     color="primary"
@@ -42,8 +40,8 @@ export const generateCertifications = (certification, cb) =>{
             
         case (certification.score >= 299):
                    certification = 
-                   <Tooltip title="Accepted" placement="right" onClick={() => cb(certification.id)}>
-                    <div key={certification.name}>
+                   <Tooltip title="Accepted" placement="right" onClick={() => cb(certification.id)}  key={certification.name}>
+                    <div>
                         <Chip 
                         label={certification.name}
                         color="secondary"
@@ -60,7 +58,6 @@ export const generateCertifications = (certification, cb) =>{
             certification = 
                 <div key={certification.name}>
                 <Chip 
-                color="#ff0000"
                 label={certification.name}
                     />
                 </div>  
@@ -69,3 +66,16 @@ export const generateCertifications = (certification, cb) =>{
         }
         return certification
     }
+
+
+export const generateAttachmentComponents = (attachment, cb) =>{
+    switch(true){
+        case (attachment.type.toLowerCase() === "gif"):
+            return (
+                <div className="gif" style={{padding: '5px'}} onClick={() => cb(attachment.id)} key={"gif" + attachment}>
+                 <img src={attachment.thumbnail} />   
+                </div>
+            )
+    }
+
+}

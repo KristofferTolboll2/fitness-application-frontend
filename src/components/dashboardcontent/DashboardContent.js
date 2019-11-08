@@ -27,9 +27,10 @@ const useStyles = makeStyles(theme =>({
       },
 }))
 
-export default function DashbaordContent() {
+export default function DashbaordContent(props) {
     const classes = useStyles()
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+    
     return (
       <Dashboard>
         <div>
@@ -50,7 +51,7 @@ export default function DashbaordContent() {
             {/* Recent Orders */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <Trainers />
+                <Trainers history={props.history} />
               </Paper>
             </Grid>
           </Grid>

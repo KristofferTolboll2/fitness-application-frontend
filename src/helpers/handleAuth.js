@@ -15,9 +15,13 @@ export const handleLogin = (token, trainer, history) =>{
 
 
 export const handleLoginError = (err) =>{
+    if(err.response){
     if(err.response.status === 401){
         return "Wrong credentials"
     }
+}else{
+    console.log(err)
+}
 }
 
 export const handleLogout = (props) =>{

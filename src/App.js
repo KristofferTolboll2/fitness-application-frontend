@@ -2,19 +2,23 @@ import React, { Component } from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import cyan from '@material-ui/core/colors/cyan';
 import orange from '@material-ui/core/colors/orange'
-import red from '@material-ui/core/colors/red'
-import green from '@material-ui/core/colors/green'
 import grey from '@material-ui/core/colors/grey'
 import { ThemeProvider } from '@material-ui/core/styles'
 import SigninSide from './signup/SigninSide'
+import SignupSide from './signup/SignupSide'
 import './App.css';
-import { Route, Link, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import AuthComponent from './routing/auth/AuthComponent'
 import RoutingComponent from './components/RoutingComponent';
 import Profile from './components/profile/Profile';
 import {Router} from 'react-router'
 import history from './routing/history/history'
 import { indigo } from '@material-ui/core/colors';
+import SocketContext from './socket-context'
+import openSocket from 'socket.io-client';
+
+
+
 
 
 const standardTheme = createMuiTheme({
@@ -59,9 +63,10 @@ class App extends Component {
       <div className="App">
         <Switch>
       <Route path={'/login'} exact component={SigninSide} forceRefresh={true} />
+      <Route path={"/signup"} exact component={SignupSide} forceRefresh={true} />
       <AuthComponent>
-        <Route path={'/dashboard'} render={() => <RoutingComponent />} />
-        <Route path={'/profile'} component={() => <Profile/>} />
+        <Route path={'/dashboard'} render={() => <RoutingComponent history={history} />} />
+        <Route path={'/profile/:id'} render={({match}) => <Profile  history={history} {...match}/>} />
       </AuthComponent>
       </Switch>
       </div>

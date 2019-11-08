@@ -9,6 +9,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from '../../ui/Title';
 import Trainer from './Trainer'
+import { useFetch } from '../../../hooks/useFetch';
+
 // Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount, image) {
   return { id, date, name, shipTo, paymentMethod, amount, image };
@@ -28,8 +30,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Trainers() {
+export default function Trainers(props) {
+  
   const classes = useStyles();
+  console.log(props)
+  const [data, loading] = useFetch('http://localhost:5000/api/trainer/all')
+  if(loading){
+    return <p>Loading...</p>
+  }
+  const {trainers} = data.message
+
+
+
   return (
     <React.Fragment>
       <Title>Suggested Trainers</Title>
@@ -37,16 +49,21 @@ export default function Trainers() {
         <TableHead>
           <TableRow>
             <TableCell></TableCell>
-            <TableCell>Date</TableCell>
             <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
+            <TableCell>Certifications</TableCell>
+            <TableCell>Rating</TableCell>
+            <TableCell>Fitness Tags</TableCell>
+            <TableCell>TEST</TableCell>
+            <TableCell align="right">TEST</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row, i) => (
-            <Trainer row={row} key={`item number ${i+1}`}/>
+          {trainers.map((trainer, i) => (
+            <Trainer 
+            trainer={trainer} 
+            key={`item number ${i+1}`}
+            history={props.history}
+            />
           ))}
         </TableBody>
       </Table>

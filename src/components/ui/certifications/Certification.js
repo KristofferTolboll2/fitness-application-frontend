@@ -17,7 +17,7 @@ export default function AlertDialogSlide(props) {
     const [certification, setCertification] = React.useState({})
 
     React.useEffect(async () => {
-      const certification = await axios.get(`http://localhost:4000/api/get/${id}`)
+      const certification = await axios.get(`http://localhost:5000/api/get/${id}`)
       setCertification(certification);
     }, [])
   return (

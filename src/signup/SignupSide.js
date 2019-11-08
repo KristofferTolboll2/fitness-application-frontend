@@ -10,16 +10,19 @@ import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import AcountCircle from '@material-ui/icons/AccountCircle';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Loader from 'react-loader-spinner';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { MdMailOutline, MdVerifiedUser } from 'react-icons/md';
+import { MdMailOutline, MdVerifiedUser, MdAccountCircle, MdLibraryBooks } from 'react-icons/md';
 import axios from 'axios';
 import {validate} from '../hookValidation/LoginFormValidationRules';
 import {handleLogin, handleLoginError} from '../helpers/handleAuth';
 import {isLoggedIn} from '../helpers/jwt';
+import {top100Films} from '../service/FitnessCategories';
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import {MdFace} from 'react-icons/md';
 
 
 function Copyright() {
@@ -65,6 +68,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+
+
+
 export default function SigninSide(props) {
 
 
@@ -72,16 +78,15 @@ export default function SigninSide(props) {
 
   const submitHandler = () =>{
     setIsLoading(true)
-    const trainerUser = {email: values.email, 
+    const user = {email: values.email, 
                   password: values.password}  
       //status code should be 401 here instead
     //should be wrapped into seperate function 
-    axios.post('http://localhost:5000/api/trainer/login', trainerUser)
+    axios.post('http://localhost:4000/api/auth/login', user)
     .then(res =>{
       console.log(res)
       setIsLoading(false)
-      const token = res.data.access_token
-      const trainer = res.data.trainer;
+      const {token, trainer} = res.data.data;
       handleLogin(token, trainer)
       props.history.push('/dashboard')
     }).catch(err =>{
@@ -90,11 +95,19 @@ export default function SigninSide(props) {
       setLoginError(handleLoginError(err))
     })
 }
+
+const responseFacebook = (response) => {
+  console.log(response);
+}
+
+
   const [isLoading, setIsLoading] = React.useState(false)
   const [loginError, setLoginError] = React.useState("")
   const { values, errors, handleChange, handleSubmit} = useForm(submitHandler, validate);
+  const [fitnessCategories, setFitnessCategories] = React.useState([]);
 
-  
+
+  console.log(values)
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -102,11 +115,12 @@ export default function SigninSide(props) {
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <AcountCircle />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign up
           </Typography>
+          <div className="fb-login-button" data-width="" data-size="large" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="true"></div>
           <form className={classes.form} onSubmit={handleSubmit}>
             <TextField
               error={errors.email ? true : false}
@@ -152,10 +166,117 @@ export default function SigninSide(props) {
                 )
             }}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+                 <TextField
+              error={errors.firstname ? true : false}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="firstname"
+              label="First name"
+              name="firstname"
+              autoComplete="firstname"
+              helperText={errors.firstname ? errors.firstname : ''}
+              autoFocus
+              onChange={handleChange}
+              value={values.firstname || ''}
+              required
+              InputProps={{
+                  startAdornment: (
+                      <InputAdornment position="start">
+                          <MdAccountCircle size={20} />
+                        </InputAdornment>
+                  )
+              }}
             />
+                 <TextField
+              error={errors.lastName ? true : false}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="lastname"
+              label="Last name"
+              name="lastname"
+              autoComplete="email"
+              helperText={errors.lastName ? errors.email : ''}
+              autoFocus
+              onChange={handleChange}
+              value={values.lastName || ''}
+              required
+              InputProps={{
+                  startAdornment: (
+                      <InputAdornment position="start">
+                          <MdAccountCircle size={20} />
+                        </InputAdornment>
+                  )
+              }}
+            />  <TextField
+            error={errors.lastName ? true : false}
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            type="number"
+            id="age"
+            label="Age"
+            name="age"
+            autoComplete="age"
+            helperText={errors.age ? errors.age : ''}
+            autoFocus
+            onChange={handleChange}
+            value={values.lastName || ''}
+            required
+            InputProps={{
+                startAdornment: (
+                    <InputAdornment position="start">
+                        <MdFace size={20} />
+                      </InputAdornment>
+                )
+            }}
+          />
+                 <TextField
+              error={errors.bio ? true : false}
+              variant="outlined"
+              margin="normal"
+              required
+              placeholder="Write a few words about yourself and your goals"
+              multiline
+              rows="6"
+              fullWidth
+              id="biography"
+              label="Biography"
+              name="biography"
+              autoComplete="email"
+              helperText={errors.bio ? errors.bio : ''}
+              autoFocus
+              onChange={handleChange}
+              value={values.bio || ''}
+              required
+              InputProps={{
+                  startAdornment: (
+                      <InputAdornment position="start" >
+                          <MdLibraryBooks size={20} />
+                        </InputAdornment>
+                  )
+              }}
+            />
+           <Autocomplete
+        multiple
+        onChange={(e,v) => setFitnessCategories(v)}
+        options={top100Films}
+        getOptionLabel={option => option.title}
+        renderInput={params => (
+          <TextField
+            {...params}
+            variant="standard"
+            label="Multiple values"
+            placeholder="Favorites"
+            margin="normal"
+            fullWidth
+          />
+        )}
+      />
             {loginError &&
             <div style={{backgroundColor: 'red', padding: '5px', borderRadius: '5px'}}>
             <p style={{color: 'white', fontSize: '15px'}}>{loginError}</p>
@@ -174,12 +295,7 @@ export default function SigninSide(props) {
               color="#00ffff"/> : 'Sign In'}
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
+              <Grid item style={{width: '100%'}}>
                 <Link href="#" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>

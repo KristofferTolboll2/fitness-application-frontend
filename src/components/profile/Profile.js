@@ -16,10 +16,11 @@ import {generateCertifications} from '../../helpers/generateUI'
 import Message from '@material-ui/icons/Message';
 import Event from '@material-ui/icons/Event';
 import Certification from '../ui/certifications/Certification';
-import ChatModal from '../../components/chat/ChatModal'
-import axios from 'axios'
-import {getJwt} from '../../helpers/jwt'
+import ChatModal from '../chat/ChatModal/ChatModal'
+import {getTrainer} from '../../helpers/trainer'
 import { useFetch } from '../../hooks/useFetch';
+import axios from 'axios';
+import { getJwt } from '../../helpers/jwt';
 
 const useStyles = makeStyles(theme =>({
     paper: {
@@ -48,17 +49,17 @@ const useStyles = makeStyles(theme =>({
       }
 }))
 
+const trainer = getTrainer()
+
+
 
 export default function Profile(props) {
     const classes = useStyles();
-
-
     const [isImageModalOpen, setImageOpenModal] = React.useState(false);
     const [isCertificationModalOpen, setCertificationOpenModal] = React.useState(false);
     const [isChatModalOpen, setChatOpenModal] = React.useState(false)
-
-    const [data, loading] = useFetch('http://localhost:4000/api/certification/get')
-
+    const [data, loading] = useFetch(`http://localhost:5000/api/trainer/profile?id=${props.params.id}`)
+    
     const setCloseChatModalHandler = () => {
       setChatOpenModal(false);
     }
@@ -84,17 +85,20 @@ export default function Profile(props) {
       setCertificationOpenModal(true);
     }
 
+    
+
     let certificationComponents = undefined
     if(loading){
       certificationComponents = <p>Loading...</p>
     }else{
-      console.log(data.certifications)
-     certificationComponents = data.certifications.map((certification,i) =>{
+    const trainer = data.msg
+     certificationComponents = trainer.certifications.map((certification,i) =>{
       return(
         generateCertifications(certification, setOpenCertificationModalHandler)
       )
     })
   }
+ 
 
     return (
         <Dashboard {...props}>
@@ -107,13 +111,13 @@ export default function Profile(props) {
                     <div className={classes.cardDetails}>
                       <CardContent>
                         <Typography component="h2" variant="h5">
-                          <Title size={'28px'}>Name </Title>
+                          <Title size={'28px'}>{trainer.first_name} {trainer.last_name}</Title>
                         </Typography>
                         <Button endIcon={<Message></Message>} onClick={setOpenChatModalHandler}> Send Message</Button>
                         <span style={{padding: '5px'}}/>
                         <Button endIcon={<Event></Event>}>Book Appointment</Button>
                         <br/>
-                        <Typography variant="subtitle1" color="grey">
+                        <Typography variant="subtitle1">
                           <Title size={'20px'} color="secondary"> Occupation </Title>
                         </Typography>
                         <Typography variant="subtitle1" paragraph>
@@ -130,16 +134,18 @@ export default function Profile(props) {
                       <p>Hello</p>
                   </Card>
                 {/* Modal components */}
-                <Certification open={isCertificationModalOpen} setClose={setCloseCertificationModalHandler} />  
+                {/*<Certification open={isCertificationModalOpen} setClose={setCloseCertificationModalHandler} />  */}  
                <ImageCarousel open={isImageModalOpen} setClose={setCloseImageModalHandler} />
-               <ChatModal open={isChatModalOpen} setClose={setCloseChatModalHandler} name="Joe"/>
+               <ChatModal id={props.params.id} open={isChatModalOpen} setClose={setCloseChatModalHandler} name="Joe"/>
               {/* */}
               </Grid>
               <Grid item xs={12} lg={6} style={{padding: '10px'}}>
                   <Card className={classes.card}>
+    const trainer = data.msg;
                     <div className={classes.cardDetails}>
                       <CardContent>
                         <div className={classes.certifications}>
+                        <Title color={"secondary"}>Certificates</Title>
                      {certificationComponents}
                      </div>
                       </CardContent>

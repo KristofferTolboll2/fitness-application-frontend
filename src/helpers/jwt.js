@@ -18,7 +18,7 @@ export const isLoggedIn = async () =>{
     if(!getJwt()){
         return false;
     }else{
-    axios.get('http://localhost:4000/api/trainer/auth', {headers: {Authorization: `Bearer ${getJwt()}`}})
+    axios.get('http://localhost:5000/api/trainer/auth', {headers: {Authorization: `Bearer ${getJwt()}`}})
     .then(res =>{
         console.log(res.data.response)
         return res.data.response

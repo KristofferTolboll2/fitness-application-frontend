@@ -3,6 +3,7 @@ import axios from 'axios';
 import LoadingScreen from '../../components/ui/loaders/LoadingScreen'
 import {withRouter} from 'react-router-dom'
 import {getJwt} from '../../helpers/jwt';
+import {setTrainer} from '../../helpers/trainer'
 
  function AuthComponent(props) {
     
@@ -15,17 +16,18 @@ import {getJwt} from '../../helpers/jwt';
             return;
         }
       
-        axios.get('http://localhost:4000/api/trainer/get', {headers: {Authorization: `Bearer ${getJwt()}`}})
+        axios.get('http://localhost:5000/api/trainer/auth', {headers: {Authorization: `Bearer ${getJwt()}`}})
         .then(res => {
-            console.log(res.data)
-            setUser(getJwt());
+            setUser(res.data.data);
+            setTrainer(res.data.data);
         })
         .catch(err => {
         if(err.response.status === 401 && user === undefined){
             props.history.push('/login')
         }
     })
-    })
+
+    }, [])
     
     if(user === null){
         props.history.push('/login')
