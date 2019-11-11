@@ -16,7 +16,7 @@ import {generateCertifications} from '../../helpers/generateUI'
 import Message from '@material-ui/icons/Message';
 import Event from '@material-ui/icons/Event';
 import Certification from '../ui/certifications/Certification';
-import ChatModal from '../chat/ChatModal/ChatModal'
+import ChatModal from '../chat/chatmodal/ChatModal'
 import {getTrainer} from '../../helpers/trainer'
 import { useFetch } from '../../hooks/useFetch';
 import axios from 'axios';
@@ -60,6 +60,11 @@ export default function Profile(props) {
     const [isChatModalOpen, setChatOpenModal] = React.useState(false)
     const [data, loading] = useFetch(`http://localhost:5000/api/trainer/profile?id=${props.params.id}`)
     
+    const sendMessageCallback = (response) =>{
+      setChatOpenModal(false);
+      alert(response)
+    }
+
     const setCloseChatModalHandler = () => {
       setChatOpenModal(false);
     }
@@ -136,7 +141,7 @@ export default function Profile(props) {
                 {/* Modal components */}
                 {/*<Certification open={isCertificationModalOpen} setClose={setCloseCertificationModalHandler} />  */}  
                <ImageCarousel open={isImageModalOpen} setClose={setCloseImageModalHandler} />
-               <ChatModal id={props.params.id} open={isChatModalOpen} setClose={setCloseChatModalHandler} name="Joe"/>
+               <ChatModal cb={sendMessageCallback} id={props.params.id} open={isChatModalOpen} setClose={setCloseChatModalHandler} name="Joe"/>
               {/* */}
               </Grid>
               <Grid item xs={12} lg={6} style={{padding: '10px'}}>

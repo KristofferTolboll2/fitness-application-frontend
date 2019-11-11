@@ -14,8 +14,7 @@ import Profile from './components/profile/Profile';
 import {Router} from 'react-router'
 import history from './routing/history/history'
 import { indigo } from '@material-ui/core/colors';
-import SocketContext from './socket-context'
-import openSocket from 'socket.io-client';
+import Messsenger from './components/chat/messages/messenger/Messenger';
 
 
 
@@ -67,6 +66,7 @@ class App extends Component {
       <AuthComponent>
         <Route path={'/dashboard'} render={() => <RoutingComponent history={history} />} />
         <Route path={'/profile/:id'} render={({match}) => <Profile  history={history} {...match}/>} />
+        <Route path={'/messages'} render={({match}) => <Messsenger  history={history} {...match}/>} />
       </AuthComponent>
       </Switch>
       </div>

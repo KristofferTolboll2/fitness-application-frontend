@@ -7,9 +7,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
+import MessageIcon from '@material-ui/icons/Message';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown'
 import {handleLogout} from '../helpers/handleAuth'
+import {Link} from 'react-router-dom';
 
 const StyledMenu = withStyles({
   paper: {
@@ -68,11 +69,12 @@ export default function CustomizedMenus(props) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <StyledMenuItem>
+        
+        <StyledMenuItem component={Link} to={"/messages"}>
           <ListItemIcon>
-            <SendIcon fontSize="small" />
+            <MessageIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText primary="Sent mail" />
+          <ListItemText primary="Messages" />
         </StyledMenuItem>
         <StyledMenuItem>
           <ListItemIcon>

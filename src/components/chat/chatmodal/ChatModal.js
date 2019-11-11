@@ -25,8 +25,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function ChatModal(props) {
+
+
+  
     const classes = useStyles();
-    const {open, setClose, name} = props;
+    const {open, setClose, name, cb} = props;
+    const [socketConnected, setSocketConnected] = React.useState(false);
     const [content, setContent] = React.useState("");
     const [showGiphy, setGiphy] = React.useState(false);
     const [showEmoji, setEmoji] = React.useState(false);
@@ -38,7 +42,7 @@ export default function ChatModal(props) {
       setLoading(true)
       try{
       const response = await sendMessage(props.id, content, attachments)
-      console.log(response)
+      cb(response)
       }catch(e){
         console.log(e)
       }finally{
