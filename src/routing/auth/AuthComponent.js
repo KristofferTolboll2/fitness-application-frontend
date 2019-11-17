@@ -18,8 +18,8 @@ import {setTrainer} from '../../helpers/trainer'
       
         axios.get('http://localhost:5000/api/trainer/auth', {headers: {Authorization: `Bearer ${getJwt()}`}})
         .then(res => {
-            setUser(res.data.data);
-            setTrainer(res.data.data);
+            setUser(res.data.data.id);
+            setTrainer(res.data.data.id);
         })
         .catch(err => {
         if(err.response.status === 401 && user === undefined){

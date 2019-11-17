@@ -15,6 +15,7 @@ import EmojiSlider from './EmojiSlider'
 import Attachments from './Attachments'
 import SocketContext from '../../../socket-context';
 import { useSendMessage, sendMessage } from '../../../hooks/useSendChat';
+import Loader from 'react-loader-spinner';
 
 const useStyles = makeStyles(theme => ({
     textField: {
@@ -25,12 +26,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function ChatModal(props) {
-
-
   
     const classes = useStyles();
     const {open, setClose, name, cb} = props;
-    const [socketConnected, setSocketConnected] = React.useState(false);
     const [content, setContent] = React.useState("");
     const [showGiphy, setGiphy] = React.useState(false);
     const [showEmoji, setEmoji] = React.useState(false);
@@ -39,15 +37,13 @@ export default function ChatModal(props) {
     console.log(props)
 
     const sendChatMessage = async() =>{
-      setLoading(true)
-      try{
-      const response = await sendMessage(props.id, content, attachments)
-      cb(response)
-      }catch(e){
-        console.log(e)
-      }finally{
-        setLoading(false)
+      if(content.length <= 0){
+        return alert("Please enter a message")
       }
+      setLoading(true)
+      await sendMessage(props.id, content, attachments, )
+      setLoading(false)
+      setClose()
     }
 
     const addFileAttachment = (event) =>{
@@ -128,7 +124,7 @@ export default function ChatModal(props) {
           
             
         <span>
-            <IconButton onClick={toggleGiphy}><GifPopUp show={showGiphy} /><Gif style={{fontSize: '1.7em'}} /></IconButton>
+            <IconButton onClick={toggleGiphy}><GifPopUp show={showGiphy} /><Gif fontSize="large" /></IconButton>
             <IconButton onClick={toggleEmoji}><Mood /></IconButton>
             <IconButton >
                 <AttachFile />
@@ -145,9 +141,16 @@ export default function ChatModal(props) {
           
         </DialogContent>
         <DialogActions>
+          {loading ?
+          <Loader 
+          type="TailSpin" 
+          height={20}
+          width={20}
+          color="#00ffff"/>: 
           <Button autoFocus onClick={sendChatMessage} color="primary">
             Send
           </Button>
+          }
           <Button onClick={setClose} color="primary">
             Cancel
           </Button>

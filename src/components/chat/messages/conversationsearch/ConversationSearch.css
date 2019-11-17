@@ -19,3 +19,7 @@
 .conversation-search-input:focus::placeholder {
   text-align: left;
 }
+
+.toolbar{
+  padding: 5px;
+}

@@ -1,18 +1,23 @@
-import openSocket from 'socket.io-client';
+import io from 'socket.io-client';
 import { stringify } from 'querystring';
-const socket = openSocket('http://localhost:5000');
+const socket = io('http://localhost:5000');
+import { getTrainer } from '../helpers/trainer'
 
 
 export const sendMessage = (user, content, attachments) =>{
     const data = {
-        sender: user,
+        receiver: user,
+        sender: getTrainer(),
         content: content, 
         attachments: attachments,
         timeStamp: Date.now()
     }
     try{
-        const res = socket.emit('test', data)
-        return stringify(res)
+        socket.emit('send_message_user_to_trainer', data,(response) =>{
+            response = JSON.parse(response)
+            console.log(response.status)
+            alert(response.message)
+        })
     }catch(exception){
         return exception
     }
